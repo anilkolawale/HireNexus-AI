@@ -1,4 +1,6 @@
-# AI Recruitment ATS — Build Status
+# 🚀 HireNexus AI
+### Next-Gen Enterprise AI Applicant Tracking System & Talent Acquisition Platform
+
 
 ## What's implemented (working, real code)
 

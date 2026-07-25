@@ -1,5 +1,6 @@
-# 🚀 AI-Powered Applicant Tracking System (ATS)
+# 🚀 HireNexus AI
 ## Master System Architecture, Panel Operations & Audit Report
+
 
 ---
 

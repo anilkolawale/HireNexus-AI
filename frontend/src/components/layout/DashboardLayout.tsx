@@ -122,8 +122,9 @@ export default function DashboardLayout() {
                   transition={{ duration: 0.15 }}
                   className="font-bold text-gray-900 dark:text-white text-lg tracking-tight whitespace-nowrap"
                 >
-                  HireIQ
+                  HireNexus AI
                 </motion.span>
+
               )}
             </AnimatePresence>
           </div>
