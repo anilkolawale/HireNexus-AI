@@ -1,0 +1,18 @@
+# Node / React
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/build/
+
+# .NET / C#
+backend/bin/
+backend/obj/
+backend/**/bin/
+backend/**/obj/
+.vs/
+*.user
+*.suo
+
+# Operating System
+.DS_Store
+Thumbs.db
