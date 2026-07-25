@@ -137,7 +137,7 @@ export default function CreateJobPage() {
     onError: () => toast.error('Could not generate description'),
   })
 
-  // Submit mutation
+  // Submit mutation (Draft)
   const createMutation = useMutation({
     mutationFn: () =>
       jobsApi.createJob({
@@ -157,7 +157,7 @@ export default function CreateJobPage() {
         skills,
       }),
     onSuccess: () => {
-      toast.success('Job created as draft!')
+      toast.success('Job saved as draft!')
       navigate('/jobs')
     },
     onError: (err: any) => {
@@ -166,6 +166,40 @@ export default function CreateJobPage() {
         ? Object.values(err.response.data.errors).flat().join(' | ')
         : null
       toast.error(serverMsg || valErrors || 'Could not create job. Please check all fields.')
+    },
+  })
+
+  // Submit & Publish Live mutation
+  const createAndPublishMutation = useMutation({
+    mutationFn: async () => {
+      const created = await jobsApi.createJob({
+        title,
+        description,
+        responsibilities,
+        benefits,
+        companyId,
+        departmentId,
+        hiringManagerId: hiringManagerId || user!.id,
+        createdByRecruiterId: user!.id,
+        experienceRequired,
+        salaryMin,
+        salaryMax,
+        location: isRemote ? `${location} (Remote)` : location,
+        employmentType,
+        skills,
+      })
+      if (created?.id) {
+        await jobsApi.publishJob(created.id)
+      }
+      return created
+    },
+    onSuccess: () => {
+      toast.success('🚀 Job created and published live on the Job Board!')
+      navigate('/jobs')
+    },
+    onError: (err: any) => {
+      const serverMsg = err.response?.data?.message
+      toast.error(serverMsg || 'Could not publish job. Please check all required fields.')
     },
   })
 
@@ -182,8 +216,12 @@ export default function CreateJobPage() {
     return Object.keys(e).length === 0
   }
 
-  const handleSubmit = () => {
+  const handleSubmitDraft = () => {
     if (validate()) createMutation.mutate()
+  }
+
+  const handleSubmitPublish = () => {
+    if (validate()) createAndPublishMutation.mutate()
   }
 
   const addSkill = (s: string) => {
@@ -449,23 +487,38 @@ export default function CreateJobPage() {
           </div>
 
           {/* Submit */}
-          <div className="flex items-center gap-4 pb-8">
+          <div className="flex flex-wrap items-center gap-3 pb-8">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={handleSubmit}
-              disabled={createMutation.isPending}
-              className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:opacity-50 text-white px-8 py-3 rounded-xl font-semibold text-sm shadow-lg shadow-indigo-500/25 transition-all"
+              onClick={handleSubmitPublish}
+              disabled={createAndPublishMutation.isPending || createMutation.isPending}
+              className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 disabled:opacity-50 text-white px-7 py-3 rounded-xl font-semibold text-sm shadow-lg shadow-emerald-500/25 transition-all"
             >
-              {createMutation.isPending ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Creating…</>
+              {createAndPublishMutation.isPending ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Publishing…</>
               ) : (
-                <><CheckCircle className="w-4 h-4" /> Create Job</>
+                <><Sparkles className="w-4 h-4" /> Publish Job Live</>
               )}
             </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSubmitDraft}
+              disabled={createMutation.isPending || createAndPublishMutation.isPending}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-50 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all"
+            >
+              {createMutation.isPending ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</>
+              ) : (
+                <><CheckCircle className="w-4 h-4" /> Save as Draft</>
+              )}
+            </motion.button>
+
             <button
               onClick={() => navigate('/jobs')}
-              className="px-6 py-3 rounded-xl text-sm text-white/50 hover:text-white/80 hover:bg-white/5 transition-all"
+              className="px-5 py-3 rounded-xl text-sm text-white/50 hover:text-white/80 hover:bg-white/5 transition-all"
             >
               Cancel
             </button>

@@ -20,8 +20,8 @@ describe('LoginPage', () => {
   it('renders email, password fields and a submit button', () => {
     renderWithProviders(<LoginPage />)
 
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email address')).toBeInTheDocument()
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
   })
 
@@ -38,8 +38,8 @@ describe('LoginPage', () => {
 
     const { store } = renderWithProviders(<LoginPage />)
 
-    await user.type(screen.getByPlaceholderText('Email'), 'jane@ats.local')
-    await user.type(screen.getByPlaceholderText('Password'), 'Password123!')
+    await user.type(screen.getByLabelText('Email address'), 'jane@ats.local')
+    await user.type(screen.getByLabelText('Password'), 'Password123!')
     await user.click(screen.getByRole('button', { name: /sign in/i }))
 
     await waitFor(() => {
@@ -60,8 +60,8 @@ describe('LoginPage', () => {
 
     renderWithProviders(<LoginPage />)
 
-    await user.type(screen.getByPlaceholderText('Email'), 'jane@ats.local')
-    await user.type(screen.getByPlaceholderText('Password'), 'Password123!')
+    await user.type(screen.getByLabelText('Email address'), 'jane@ats.local')
+    await user.type(screen.getByLabelText('Password'), 'Password123!')
     await user.click(screen.getByRole('button', { name: /sign in/i }))
 
     expect(screen.getByRole('button', { name: /signing in/i })).toBeDisabled()
@@ -77,8 +77,8 @@ describe('LoginPage', () => {
 
     const { store } = renderWithProviders(<LoginPage />)
 
-    await user.type(screen.getByPlaceholderText('Email'), 'jane@ats.local')
-    await user.type(screen.getByPlaceholderText('Password'), 'wrong-password')
+    await user.type(screen.getByLabelText('Email address'), 'jane@ats.local')
+    await user.type(screen.getByLabelText('Password'), 'wrong-password')
     await user.click(screen.getByRole('button', { name: /sign in/i }))
 
     await waitFor(() => {

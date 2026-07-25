@@ -5,7 +5,7 @@ import axiosClient from '../../api/axiosClient'
 import { useAppDispatch } from '../../app/hooks'
 import { setCredentials } from './authSlice'
 import toast from 'react-hot-toast'
-import { Eye, EyeOff, Loader2, Sparkles, Users, Zap, Shield } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Sparkles, Users, Zap, Shield, TrendingUp } from 'lucide-react'
 
 const features = [
   { icon: Sparkles, text: 'AI-powered candidate scoring', color: 'text-purple-400' },
@@ -52,7 +52,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-glow">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-bold text-xl tracking-tight">HireIQ</span>
+            <span className="text-white font-bold text-xl tracking-tight">HireNexus AI</span>
           </div>
         </div>
 
@@ -99,23 +99,31 @@ export default function LoginPage() {
           </motion.ul>
         </div>
 
-        {/* Bottom testimonial */}
+        {/* Bottom Impact & Stats Card */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="relative z-10 glass-panel p-5"
+          className="relative z-10 glass-panel p-5 border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl shadow-xl"
         >
-          <p className="text-gray-300 text-sm italic leading-relaxed">
-            "HireIQ cut our time-to-hire by 60% and our AI match scores are scarily accurate."
-          </p>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center text-white text-xs font-bold">
-              S
+          <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400">HireNexus AI Impact</span>
             </div>
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary-500/20 text-primary-300 font-medium border border-primary-500/30">Live Platform Stats</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-white text-xs font-semibold">Sarah Chen</p>
-              <p className="text-gray-500 text-xs">VP Talent, Acme Corp</p>
+              <p className="text-2xl font-bold text-white tracking-tight">98.4%</p>
+              <p className="text-gray-400 text-xs mt-0.5">AI Match Precision</p>
+            </div>
+            <div className="border-l border-white/10 pl-4">
+              <p className="text-2xl font-bold font-mono text-emerald-400 tracking-tight">60% ⚡</p>
+              <p className="text-gray-400 text-xs mt-0.5">Faster Time-to-Hire</p>
             </div>
           </div>
         </motion.div>
@@ -134,7 +142,7 @@ export default function LoginPage() {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="text-gray-900 dark:text-white font-bold text-lg">HireIQ</span>
+            <span className="text-gray-900 dark:text-white font-bold text-lg">HireNexus AI</span>
           </div>
 
           <div className="mb-8">
@@ -203,6 +211,18 @@ export default function LoginPage() {
               )}
             </motion.button>
           </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Don't have a candidate account?{' '}
+              <Link
+                to="/register"
+                className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
 
           {/* Demo credentials hint */}
           <div className="mt-8 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800">

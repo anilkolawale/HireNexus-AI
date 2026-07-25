@@ -126,7 +126,7 @@ export default function CareerPortalPage() {
             <h1 className="text-5xl md:text-6xl font-black text-white mb-4 leading-tight">
               Build Your Career<br />
               <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #a5b4fc, #f0abfc)' }}>
-                With HireIQ
+                With HireNexus AI
               </span>
             </h1>
             <p className="text-white/70 text-xl max-w-2xl mx-auto mb-10">

@@ -162,7 +162,7 @@ public class HousekeepingJobs
                     $"<tr><td style=\"padding:8px 0;color:#94a3b8\">Duration</td><td style=\"color:#f1f5f9\">{interview.DurationMinutes} minutes</td></tr>" +
                     $"</table>" +
                     $"<div style=\"margin:24px 0\">{meetLink}</div>" +
-                    $"<p style=\"color:#64748b;font-size:13px\">Sent by HireIQ — AI Recruitment Platform</p>" +
+                    $"<p style=\"color:#64748b;font-size:13px\">Sent by HireNexus AI — AI Recruitment Platform</p>" +
                     $"</div></div>";
 
                 await _email.SendAsync(interview.Interviewer.Email, subject, html);

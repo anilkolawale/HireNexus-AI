@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
 import {
   Search, Plus, MapPin, Briefcase, Users, Clock,
-  TrendingUp, ChevronRight, Filter, Star
+  TrendingUp, ChevronRight, Filter, Star, Globe, X
 } from 'lucide-react'
 import { jobsApi } from '../../api/endpoints/jobs.api'
+import JobBoardsPanel from './JobBoardsPanel'
 import { applicationsApi } from '../../api/endpoints/applications.api'
 import { useAppSelector } from '../../app/hooks'
 import type { JobListItem, JobStatus, EmploymentType } from '../../types/job.types'
@@ -81,9 +82,10 @@ interface JobCardProps {
   applying?: boolean
   onAction?: (action: string) => void
   actioning?: boolean
+  onOpenBoards?: () => void
 }
 
-function JobCard({ job, isRecruiter, onApply, applying, onAction, actioning }: JobCardProps) {
+function JobCard({ job, isRecruiter, onApply, applying, onAction, actioning, onOpenBoards }: JobCardProps) {
   const navigate = useNavigate()
   const sc = statusConfig(job.status)
 
@@ -184,6 +186,12 @@ function JobCard({ job, isRecruiter, onApply, applying, onAction, actioning }: J
             >
               Delete
             </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onOpenBoards?.(); }}
+              className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 font-semibold px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 transition-all"
+            >
+              <Globe className="w-3 h-3" /> LinkedIn & Boards
+            </button>
             <Link
               to={`/jobs/${job.id}/candidates`}
               className="flex items-center gap-0.5 text-[11px] text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
@@ -235,6 +243,7 @@ export default function JobListPage() {
   const [typeFilter, setTypeFilter] = useState('')
   const [applyingId, setApplyingId] = useState<string | null>(null)
   const [actioningId, setActioningId] = useState<string | null>(null)
+  const [boardsJob, setBoardsJob] = useState<JobListItem | null>(null)
 
   const { data, isLoading } = useQuery({
     queryKey: ['jobs', search, statusFilter, typeFilter],
@@ -383,6 +392,7 @@ export default function JobListPage() {
                     applying={applyingId === job.id}
                     onAction={(action) => handleAction(job.id, action)}
                     actioning={actioningId === job.id}
+                    onOpenBoards={() => setBoardsJob(job)}
                   />
                 ))
           }
@@ -395,6 +405,39 @@ export default function JobListPage() {
           Page {data.pageNumber} of {data.totalPages}
         </p>
       )}
+
+      {/* Job Boards Distribution Modal */}
+      <AnimatePresence>
+        {boardsJob && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-2xl bg-[#0f172a] border border-slate-700 p-6 rounded-2xl shadow-2xl relative"
+            >
+              <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-blue-400" /> Broadcast to Job Boards
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Position: <span className="font-semibold text-white">{boardsJob.title}</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => setBoardsJob(null)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <JobBoardsPanel jobId={boardsJob.id} />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

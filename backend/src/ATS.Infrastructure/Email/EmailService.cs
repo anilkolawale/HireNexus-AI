@@ -22,7 +22,7 @@ public class EmailService : IEmailService
         var host = _config["Smtp:Host"];
         if (string.IsNullOrWhiteSpace(host))
         {
-            _logger.LogInformation("Email (SMTP not configured, logging only) → {To}: {Subject}", to, subject);
+            _logger.LogInformation("Email (Dev Mode — SMTP unconfigured) → {To}: {Subject}\n--- EMAIL BODY ---\n{Body}\n------------------", to, subject, htmlBody);
             return;
         }
 

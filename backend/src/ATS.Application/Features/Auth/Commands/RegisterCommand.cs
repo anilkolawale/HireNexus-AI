@@ -80,30 +80,36 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthResul
         refreshToken.UserAgent = request.UserAgent;
         await _uow.Repository<RefreshToken>().AddAsync(refreshToken, ct);
 
-        var verificationToken = System.Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(48))
-            .Replace('+', '-').Replace('/', '_').TrimEnd('=');
+        var otpCode = System.Security.Cryptography.RandomNumberGenerator.GetInt32(100000, 999999).ToString();
         await _uow.Repository<EmailVerificationToken>().AddAsync(new EmailVerificationToken
         {
             UserId = user.Id,
-            Token = verificationToken,
+            Token = otpCode,
             ExpiresAtUtc = DateTime.UtcNow.AddDays(1)
         }, ct);
 
         await _uow.SaveChangesAsync(ct);
 
-        var verifyLink = $"{_config["App:FrontendBaseUrl"]?.TrimEnd('/') ?? "http://localhost:5173"}/verify-email?token={verificationToken}";
+        var verifyLink = $"{_config["App:FrontendBaseUrl"]?.TrimEnd('/') ?? "http://localhost:5173"}/verify-email?token={otpCode}&email={System.Uri.EscapeDataString(user.Email)}";
         await _email.SendAsync(
             user.Email,
-            "Welcome — verify your email",
-            $"<p>Hi {user.FirstName},</p><p>Welcome to the ATS. Please verify your email address:</p>" +
-            $"<p><a href='{verifyLink}'>Verify Email</a></p>",
+            "Verify your HireNexus AI email address",
+            $"<div style='font-family:sans-serif;padding:24px;background:#0a0f1e;color:#ffffff;border-radius:12px;'>" +
+            $"<h2 style='color:#ffffff;margin-top:0;'>Welcome to HireNexus AI, {user.FirstName}!</h2>" +
+            $"<p style='color:#94a3b8;'>Your 6-digit verification code is:</p>" +
+            $"<div style='background:#1e293b;padding:16px;border-radius:8px;text-align:center;margin:16px 0;'>" +
+            $"<span style='font-size:32px;font-weight:bold;letter-spacing:8px;color:#6366f1;'>{otpCode}</span>" +
+            $"</div>" +
+            $"<p style='color:#94a3b8;'>Or click the button below to verify instantly:</p>" +
+            $"<p><a href='{verifyLink}' style='background:#6366f1;color:#ffffff;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:bold;'>Verify Email Address</a></p>" +
+            $"</div>",
             ct);
 
         return new AuthResultDto(
             accessToken,
             refreshToken.Token,
             DateTime.UtcNow.AddMinutes(15),
-            new UserDto(user.Id, user.FirstName, user.LastName, user.Email, role.Name, user.IsEmailVerified, user.CompanyId));
+            new UserDto(user.Id, user.FirstName, user.LastName, user.Email, role.Name, false, user.CompanyId));
 
     }
 }

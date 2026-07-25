@@ -13,6 +13,10 @@ backend/**/obj/
 *.user
 *.suo
 
-# Operating System
-.DS_Store
-Thumbs.db
+# Secrets & Local Configurations
+appsettings.Development.json
+appsettings.Local.json
+*.env
+*.env.local
+.env.*.local
+

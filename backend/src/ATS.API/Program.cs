@@ -16,6 +16,8 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
 #region Logging
 
@@ -219,7 +221,7 @@ app.UseAuthorization();
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new HangfireAuthorizationFilter(app.Environment) },
-    DashboardTitle = "HireIQ — Background Jobs"
+    DashboardTitle = "HireNexus AI — Background Jobs"
 });
 
 // Register recurring housekeeping jobs

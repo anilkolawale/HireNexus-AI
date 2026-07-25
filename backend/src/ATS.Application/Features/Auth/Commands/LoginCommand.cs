@@ -73,6 +73,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResultDto>
         if (!user.IsActive)
             throw new UnauthorizedAccessException("This account has been deactivated.");
 
+        if (!user.IsEmailVerified && user.Role?.Type == ATS.Domain.Enums.UserRoleType.Candidate)
+            throw new UnauthorizedAccessException("Your email address is not verified. Please verify your email before signing in.");
+
         // Successful login clears any prior failed-attempt tracking.
         user.FailedLoginAttempts = 0;
         user.LockedOutUntilUtc = null;
