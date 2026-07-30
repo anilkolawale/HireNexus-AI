@@ -53,7 +53,7 @@ describe('LoginPage', () => {
 
   it('shows a disabled "Signing in..." state while the request is in flight', async () => {
     const user = userEvent.setup()
-    let resolveRequest: (value: any) => void = () => {}
+    let resolveRequest: (value: any) => void = () => { }
     vi.mocked(axiosClient.post).mockReturnValueOnce(
       new Promise((resolve) => { resolveRequest = resolve })
     )
